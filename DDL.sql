@@ -5,6 +5,7 @@ DROP TABLE tbl_seat CASCADE CONSTRAINTS;
 DROP TABLE tbl_management CASCADE CONSTRAINTS;
 DROP TABLE tbl_admin CASCADE CONSTRAINTS;
 DROP TABLE tbl_user CASCADE CONSTRAINTS;
+DROP TABLE tbl_register CASCADE CONSTRAINTS;
 DROP TABLE tbl_reservation CASCADE CONSTRAINTS;
 DROP TABLE tbl_return CASCADE CONSTRAINTS;
 
@@ -16,7 +17,7 @@ DROP SEQUENCE return_seq;
 
 CREATE SEQUENCE group_seq;
 CREATE TABLE tbl_group(
-    goupId	NUMBER NOT NULL PRIMARY KEY,
+    groupId	NUMBER NOT NULL PRIMARY KEY,
     groupName	varchar2(50)
 );
 
@@ -27,8 +28,7 @@ CREATE TABLE tbl_library(
     Address 	varchar2(200) NOT NULL,
     groupId 	NUMBER NOT NULL
 );
-
-ALTER TABLE tbl_library add constraint fk_lib_group foreign key(groudId) references tbl_group(groupId);
+ALTER TABLE tbl_library add constraint fk_lib_group foreign key(groupId) references tbl_group(groupId);
 
 CREATE SEQUENCE room_seq;
 CREATE TABLE tbl_room(
@@ -40,7 +40,6 @@ CREATE TABLE tbl_room(
 ALTER TABLE tbl_room add constraint pk_room primary key(roomNumber, belongLibraryID);
 ALTER TABLE tbl_room add constraint fk_room foreign key(belongLibraryID) references tbl_library(libraryId);
 
-CREATE SEQUENCE seat_seq;
 CREATE TABLE tbl_seat(
     seatNumber              	NUMBER NOT NULL,
     belongRoomNumber	NUMBER NOT NULL,
@@ -118,7 +117,7 @@ CREATE TABLE tbl_return(
 );
 
 ALTER TABLE tbl_return add constraint pk_return primary key(returnId);
-ALTER TABLE tbl_reservation add constraint fk_reserv_seat foreign key(seatNumber, roomNumber, libraryId) references tbl_seat(seatNumber, belongRoomNumber, belongLibraryId);
+ALTER TABLE tbl_return add constraint fk_return_seat foreign key(seatNumber, roomNumber, libraryId) references tbl_seat(seatNumber, belongRoomNumber, belongLibraryId);
 ALTER TABLE tbl_return add constraint fk_user_ret foreign key(userId) references tbl_user(userId);
 
 commit;
