@@ -1,3 +1,4 @@
+DROP TABLE tbl_group CASCADE CONSTRAINTS;
 DROP TABLE tbl_library CASCADE CONSTRAINTS;
 DROP TABLE tbl_room CASCADE CONSTRAINTS;
 DROP TABLE tbl_seat CASCADE CONSTRAINTS;
@@ -7,19 +8,27 @@ DROP TABLE tbl_user CASCADE CONSTRAINTS;
 DROP TABLE tbl_reservation CASCADE CONSTRAINTS;
 DROP TABLE tbl_return CASCADE CONSTRAINTS;
 
+DROP SEQUENCE group_seq;
 DROP SEQUENCE library_seq;
 DROP SEQUENCE room_seq;
-DROP SEQUENCE seat_seq;
 DROP SEQUENCE reserv_seq;
 DROP SEQUENCE return_seq;
 
+CREATE SEQUENCE group_seq;
+CREATE TABLE tbl_group(
+    goupId	NUMBER NOT NULL PRIMARY KEY,
+    groupName	varchar2(50)
+);
 
 CREATE SEQUENCE library_seq;
 CREATE TABLE tbl_library(
-    libraryId      Number NOT NULL primary key,
-    Name    varchar2(100) NOT NULL,
-    Address varchar2(200) NOT NULL
+    libraryId      	Number NOT NULL primary key,
+    Name    	varchar2(100) NOT NULL,
+    Address 	varchar2(200) NOT NULL,
+    groupId 	NUMBER NOT NULL
 );
+
+ALTER TABLE tbl_library add constraint fk_lib_group foreign key(groudId) references tbl_group(groupId);
 
 CREATE SEQUENCE room_seq;
 CREATE TABLE tbl_room(
@@ -33,21 +42,20 @@ ALTER TABLE tbl_room add constraint fk_room foreign key(belongLibraryID) referen
 
 CREATE SEQUENCE seat_seq;
 CREATE TABLE tbl_seat(
-    seatId                   NUMBER NOT NULL,
-    seatNumber               NUMBER NOT NULL,
-    belongRoomNumber         NUMBER NOT NULL,
-    belongLibraryId          NUMBER NOT NULL
+    seatNumber              	NUMBER NOT NULL,
+    belongRoomNumber	NUMBER NOT NULL,
+    belongLibraryId		NUMBER NOT NULL
 );
-ALTER TABLE tbl_seat add constraint pk_seat primary key(seatId);
+
+ALTER TABLE tbl_seat add constraint uk_seat primary key (seatNumber, belongRoomNumber, belongLibraryId);
 ALTER TABLE tbl_seat add constraint fk_room_seat foreign key(belongRoomNumber, belongLibraryId) references tbl_room(roomNumber,belongLibraryId);
-ALTER TABLE tbl_seat add constraint uk_seat UNIQUE (seatNumber, belongRoomNumber, belongLibraryId);
 
 CREATE TABLE tbl_admin (
-    adminId            VARCHAR2(50) NOT NULL,
-    password           VARCHAR2(50) NOT NULL,
-    name               VARCHAR2(20) NOT NULL,
-    phoneNumber        VARCHAR2(13) NOT NULL,
-    belongLibraryId    NUMBER NOT NULL
+    adminId		VARCHAR2(50) NOT NULL,
+    password		VARCHAR2(50) NOT NULL,
+    name			VARCHAR2(20) NOT NULL,
+    phoneNumber		VARCHAR2(13) NOT NULL,
+    belongLibraryId		NUMBER NOT NULL
 );
 
 ALTER TABLE tbl_admin add constraint pk_admin primary key(adminId);
@@ -83,28 +91,34 @@ ALTER TABLE tbl_management add constraint fk_manage_admin foreign key(adminId) R
 
 CREATE SEQUENCE reserv_seq;
 CREATE TABLE tbl_reservation(
-    reservId        NUMBER NOT NULL,
-    seatId          NUMBER NOT NULL,
-    userId          VARCHAR2(50) NOT NULL,
-    reservedTime    date default sysdate,
-    numOfExtension  NUMBER NOT NULL      
+    reservId        		NUMBER NOT NULL,
+    seatNumber              	NUMBER NOT NULL,
+    roomNumber		NUMBER NOT NULL,
+    libraryId		NUMBER NOT NULL,
+    userId          		VARCHAR2(50) NOT NULL,
+    regDate		date default sysdate,
+    startTime    		date NOT NULL,
+    endTime		date NOT NULL,
+    numOfExtension  	NUMBER NOT NULL      
 );
 
 ALTER TABLE tbl_reservation add constraint pk_reserv primary key(reservId);
-ALTER TABLE tbl_reservation add constraint fk_reserv_seat foreign key(seatid) references tbl_seat(seatId);
+ALTER TABLE tbl_reservation add constraint fk_reserv_seat foreign key(seatNumber, roomNumber, libraryId) references tbl_seat(seatNumber, belongRoomNumber, belongLibraryId);
 ALTER TABLE tbl_reservation add constraint fk_user_seat foreign key(userId) references tbl_user(userId);
 ALTER TABLE tbl_reservation add constraint uk_user_seat UNIQUE (userId);
 
 CREATE SEQUENCE return_seq;
 CREATE TABLE tbl_return(
     returnId        NUMBER NOT NULL,
-    seatId          NUMBER NOT NULL,
+    seatNumber              	NUMBER NOT NULL,
+    roomNumber		NUMBER NOT NULL,
+    libraryId		NUMBER NOT NULL,
     userId          VARCHAR2(50) NOT NULL,
     returnTime      date default sysdate NOT NULL
 );
 
 ALTER TABLE tbl_return add constraint pk_return primary key(returnId);
-ALTER TABLE tbl_return add constraint fk_seat_ret foreign key(seatId) references tbl_seat(seatId);
+ALTER TABLE tbl_reservation add constraint fk_reserv_seat foreign key(seatNumber, roomNumber, libraryId) references tbl_seat(seatNumber, belongRoomNumber, belongLibraryId);
 ALTER TABLE tbl_return add constraint fk_user_ret foreign key(userId) references tbl_user(userId);
 
 commit;
