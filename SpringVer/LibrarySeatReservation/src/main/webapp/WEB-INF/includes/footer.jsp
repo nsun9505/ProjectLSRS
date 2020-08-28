@@ -32,7 +32,7 @@
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
           <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">�</span>
+            <span aria-hidden="true">×</span>
           </button>
         </div>
         <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
@@ -61,6 +61,7 @@
   <!-- Page level custom scripts -->
   <script src="/resources/js/demo/datatables-demo.js"></script>
   
+  <!-- 새로고침 시 메뉴가 펼쳐지는 문제 해결 -->
   <script>
   	$(document).ready(function(){
   		$('#dataTables-example').DataTable({
@@ -68,7 +69,6 @@
   		});
   		$(".navbar-nav")
   			.attr("class", "navbar-nav bg-gradient-primary sidebar sidebar-dark accordion toggled")
- 
   	});
   </script>
 
