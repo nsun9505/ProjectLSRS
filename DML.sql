@@ -5,38 +5,43 @@ insert into tbl_library(libraryid, name, address, groupId) values(library_seq.ne
 insert into tbl_room(roomnumber, belonglibraryid, maxuser) values(101, 1, 40);
 insert into tbl_room(roomnumber, belonglibraryid, maxuser) values(201, 1, 40);
 
-insert into tbl_seat(seatnumber, belongRoomNumber, belongLibraryId)
-values(1, 101, 1);
-insert into tbl_seat(seatnumber, belongRoomNumber, belongLibraryId)
-values(2, 101, 1);
-insert into tbl_seat(seatnumber, belongRoomNumber, belongLibraryId)
-values(3, 101, 1);
-insert into tbl_seat(seatnumber, belongRoomNumber, belongLibraryId)
-values(4, 101, 1);
-insert into tbl_seat(seatnumber, belongRoomNumber, belongLibraryId)
-values(5, 101, 1);
+insert into tbl_seat(seatId, seatnumber, belongRoomNumber, belongLibraryId)
+values(seat_seq.nextval, 1, 101, 1);
+insert into tbl_seat(seatId, seatnumber, belongRoomNumber, belongLibraryId)
+values(seat_seq.nextval,2, 101, 1);
+insert into tbl_seat(seatId, seatnumber, belongRoomNumber, belongLibraryId)
+values(seat_seq.nextval,3, 101, 1);
+insert into tbl_seat(seatId, seatnumber, belongRoomNumber, belongLibraryId)
+values(seat_seq.nextval,4, 101, 1);
+insert into tbl_seat(seatId, seatnumber, belongRoomNumber, belongLibraryId)
+values(seat_seq.nextval,5, 101, 1);
 
-insert into tbl_seat(seatnumber, belongRoomNumber, belongLibraryId)
-values(1, 201, 1);
-insert into tbl_seat(seatnumber, belongRoomNumber, belongLibraryId)
-values(2, 201, 1);
-insert into tbl_seat(seatnumber, belongRoomNumber, belongLibraryId)
-values(3, 201, 1);
-insert into tbl_seat(seatnumber, belongRoomNumber, belongLibraryId)
-values(4, 201, 1);
-insert into tbl_seat(seatnumber, belongRoomNumber, belongLibraryId)
-values(5, 201, 1);
+insert into tbl_seat(seatId, seatnumber, belongRoomNumber, belongLibraryId)
+values(seat_seq.nextval,1, 201, 1);
+insert into tbl_seat(seatId, seatnumber, belongRoomNumber, belongLibraryId)
+values(seat_seq.nextval,2, 201, 1);
+insert into tbl_seat(seatId, seatnumber, belongRoomNumber, belongLibraryId)
+values(seat_seq.nextval,3, 201, 1);
+insert into tbl_seat(seatId, seatnumber, belongRoomNumber, belongLibraryId)
+values(seat_seq.nextval,4, 201, 1);
+insert into tbl_seat(seatId, seatnumber, belongRoomNumber, belongLibraryId)
+values(seat_seq.nextval,5, 201, 1);
 
-insert into tbl_admin(adminid,password, name, phonenumber, belonglibraryid) 
-values('admin', 'admin', 'admin', '010-1234-1234', 1);
+insert into tbl_auth(authid, authType)
+values(seq_auth.nextval, 'ROLE_ADMIN');
+insert into tbl_auth(authid, authType)
+values(seq_auth.nextval, 'ROLE_USER');
 
-insert into tbl_management(libraryid, adminId) values(1, 'admin');
+insert into tbl_user(userid, password, name, phonenumber, address) 
+values('admin', 'admin', '도서관관리자', '010-5678-5678', 'address');
 
 insert into tbl_user(userid, password, name, phonenumber, address) 
 values('user', 'user', 'test', '010-5678-5678', 'address');
 
-insert into tbl_register(libraryId, userid)
-values(1, 'user');
+insert into tbl_user_auth(libraryId, userId, authid)
+values(1, 'admin', 1);
+insert into tbl_user_auth(libraryId, userId, authid)
+values(1, 'user', 2);
 
 commit;
 
