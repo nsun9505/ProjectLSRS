@@ -118,7 +118,48 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
 ```xml
 <security:http>
     ...
-    <security:form-login login-page="CUSTOMLOGIN"/>
+    <security:form-login login-page="/loginPage"/>
 </security:http>
 ```
 - login-page 속성의 URI는 반드시 GET 방식으로 접근하는 URI를 지정한다.
+- 위와 같이 login-page 속성값을 "/loginPage"와 같이 정의했다면 해당 JSP를 views 아래에 있어야 한다.
+
+### loginPage.jsp
+```jsp
+<div class="container">
+	<form class="user" method="post" action="/login">
+		<div class="form-group">
+			<input type="text" class="form-control form-control-user" name="username" placeholder="ID">
+		</div>
+			<div class="form-group">
+				<input type="password" class="form-control form-control-user" name="password" placeholder="Password">
+			</div>
+			<div class="form-group">
+				<input type="submit" class="btn btn-user btn-block">
+			</div>
+			<input type="hidden" name="${_csrf.parameterName }" value="${_csrf.token }">
+	</form>
+</div>
+```
+- action="/login" : 실제 로그인의 처리 작업이 이루어지며 반드시 POST로 전송해야함.
+- name 속성은 username, password가 기본이다.
+<br><br>
+
+# JDBC를 이용한 간편 인증/권한 관리
+인증과 권한에 대한 처리는 크게 Authentication Manager에 의해 처리된다.
+- 인증이나 권한 정보를 제공하는 존재(Provider)가 필요
+- 다시 이를 위해서 UserDetailsService라는 인터페이스를 구현한 존재를 활요
+
+## JDBC를 이용하기 위한 테이블 설정
+JDBC를 이용해서 인증/권한을 체크하는 방식
+1. 지정된 형식으로 테이블을 생성해서 사용하는 방식
+1. 기존에 작성된 데이터베이스를 이용하는 방식
+
+### JdbcUserDetailsManager 클래스
+스프링 시큐리티가 JDBC를 이용하는 경우에 사용하는 클래스
+
+## 기존의 테이블을 이용하는 경우
+JDBC를 이용하고 기존에 테이블이 있다면 약간의 지정된 결과를 반환하는 쿼리를 작성해 주는 작업으로도 처리 가능
+
+\<security:jdbc-user-service> 태그 속성
+- users-by-username-query, authorities-by-username-query 속성에 적당한 쿼리문을 지정해 주면 JDBC를 이용하는 설정을 그대로 사용 가능

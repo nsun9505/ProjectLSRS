@@ -40,13 +40,14 @@ CREATE TABLE tbl_room(
 ALTER TABLE tbl_room add constraint pk_room primary key(roomNumber, belongLibraryID);
 ALTER TABLE tbl_room add constraint fk_room foreign key(belongLibraryID) references tbl_library(libraryId);
 
+CREATE SEQUENCE seat_seq;
 CREATE TABLE tbl_seat(
     seatId              NUMBER NOT NULL,
     seatNumber          NUMBER NOT NULL,
     belongRoomNumber	NUMBER NOT NULL,
     belongLibraryId		NUMBER NOT NULL
 );
-ALTER TABLE tbl_seat add constraint uk_seat primary key (seatId);
+ALTER TABLE tbl_seat add constraint pk_seat primary key (seatId);
 ALTER TABLE tbl_seat add constraint uk_seat UNIQUE (seatNumber, belongRoomNumber, belongLibraryId);
 ALTER TABLE tbl_seat add constraint fk_room_seat foreign key(belongRoomNumber, belongLibraryId) references tbl_room(roomNumber,belongLibraryId);
 

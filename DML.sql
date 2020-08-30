@@ -28,14 +28,14 @@ insert into tbl_seat(seatId, seatnumber, belongRoomNumber, belongLibraryId)
 values(seat_seq.nextval,5, 201, 1);
 
 insert into tbl_auth(authid, authType)
-values(seq_auth.nextval, 'ROLE_ADMIN');
+values(auth_seq.nextval, 'ROLE_ADMIN');
 insert into tbl_auth(authid, authType)
-values(seq_auth.nextval, 'ROLE_USER');
+values(auth_seq.nextval, 'ROLE_USER');
 
-insert into tbl_user(userid, password, name, phonenumber, address) 
+insert into tbl_user(userid, userpw, username, phonenumber, address) 
 values('admin', 'admin', '도서관관리자', '010-5678-5678', 'address');
 
-insert into tbl_user(userid, password, name, phonenumber, address) 
+insert into tbl_user(userid, userpw, username, phonenumber, address) 
 values('user', 'user', 'test', '010-5678-5678', 'address');
 
 insert into tbl_user_auth(libraryId, userId, authid)
