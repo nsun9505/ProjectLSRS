@@ -72,7 +72,7 @@ CREATE TABLE tbl_user_auth(
     userId      VARCHAR2(50) NOT NULL,
     authId      NUMBER NOT NULL
 );
-ALTER TABLE tbl_user_auth add constraint pk_userauth primary key(libraryId, userId);
+ALTER TABLE tbl_user_auth add constraint pk_userauth primary key(libraryId, userId, authid);
 ALTER TABLE tbl_user_auth add constraint fk_userauth_lib foreign key(libraryId) references tbl_library(libraryid);
 ALTER TABLE tbl_user_auth add constraint fk_userauth_user foreign key(userId) references tbl_user(userId);
 ALTER TABLE tbl_user_auth add constraint fk_userauth_auth foreign key(authId) references tbl_auth(authId);
