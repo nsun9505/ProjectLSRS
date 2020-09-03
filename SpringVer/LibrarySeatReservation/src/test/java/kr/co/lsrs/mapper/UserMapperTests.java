@@ -21,6 +21,6 @@ public class UserMapperTests {
 	public void testRead() {
 		UserVO vo = mapper.read("test");
 		log.info(vo + "\n");
-		vo.getAuthList().forEach(authVo -> log.info(authVo + "\n"));
+		vo.getAuthList().forEach(authVo -> log.info(authVo.getLibraryId() + " " + authVo.getUserId() + " " + authVo.getAuthId() + "\n"));
 	}
 }
