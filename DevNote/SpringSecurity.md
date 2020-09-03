@@ -163,3 +163,130 @@ JDBC를 이용하고 기존에 테이블이 있다면 약간의 지정된 결과
 
 \<security:jdbc-user-service> 태그 속성
 - users-by-username-query, authorities-by-username-query 속성에 적당한 쿼리문을 지정해 주면 JDBC를 이용하는 설정을 그대로 사용 가능
+
+-------------------------------------------------------------------------------------------------------------
+
+# Spring Security를 JSP에서 사용하기
+JDBC와 약간의 쿼리를 이용하는 것만으로도 데이터베이스를 이용해서 스프링 시큐리티를 사용 가능
+[security-context.xml]
+```
+<security:authentication-manager>
+		<security:authentication-provider>
+			<security:jdbc-user-service data-source-ref="dataSource"
+				users-by-username-query="select userid, userpw, enabled from tbl_user where userid=?"
+				authorities-by-username-query="select userid, authType from tbl_user_auth ua, tbl_auth auth
+													where ua.userid=? and ua.authId=auth.authId"/>
+			<security:password-encoder ref="bcryptPasswordEncoder"/>
+		</security:authentication-provider>
+	</security:authentication-manager>
+```
+
+굳이 CustomUserDetailsService와 같이 별도의 인증/권한 체크를 하는 가장 큰 이유
+- JSP 등에서 단순히 사용자의 아이디(스프링 시큐리티에서는 username) 정도가 아닌 사용자의 이름이나 이메일과 같은 추가적인 정보를 이용하기 위함.
+- LSRS 프로젝트에서는 사용자의 이름, 핸드폰 번호 등이 필요하기 때문에 스프링 시큐리티의 User를 CustomUser로 상속받아서 사용한다.
+
+## JSP에서 로그인한 사용자 정보 보여주기
+스프링 시큐리티 관련 태그 라이브러리 선언
+- \<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec">
+- \<sec:authentication> 태그와 principal이라는 이름의 속성을 사용
+
+[test.jsp]
+```html
+...
+<body>
+<h1>/member/admin page</h1>
+
+<p> principal : <sec:authentication property="principal"/></p>
+<p> UserVO : <sec:authentication property="principal.user"/></p>
+<p> 사용자 이름 : <sec:authentication property="principal.user.username"/></p>
+<p> 사용자 ID : <sec:authentication property="principal.username"/>
+<p> 사용자 휴대폰 번호 : <sec:authentication property="principal.user.phnum"/>
+<p> 사용자 권한 리스트 : <sec:authentication property="principal.user.authList"/></p>
+...
+</body>
+
+```
+- \<sec:authentication property="principal"/> : UserDetailsService에서 반환된 객체
+   - CustomUserDetailsService를 이용했다면 loadUserByUsername()에서 반환된 CustomUser 객체가 된다.
+- principal : CustomUser를 의미하므로, principal.user는 CustomUser 객체의 getUser()를 호출한다.
+   ```java
+   // CustomUser.java
+    @Getter
+    public class CustomUser extends User{
+    	private static final long serialVersionUID = 1L;
+	
+	    private UserVO user;
+	
+	    public CustomUser(String username, String password, Collection<? extends GrantedAuthority> authorities) {
+		    super(username, password, authorities);
+	    }
+	
+	    public CustomUser(UserVO vo) {
+    		super(vo.getUserid(), vo.getUserpw(), vo.getAuthList().stream()
+				    .map(auth -> new SimpleGrantedAuthority(auth.getAuthId().toString()))
+				    .collect(Collectors.toList()));
+		    this.user = vo;
+	    }
+    }
+   ```
+
+## 표현식을 이용하는 동적 화면 구성
+특정한 페이지에서 로그인한 사용자의 경우에는 특정한 내용을 보여주고, 그렇지 않은 경우에는 다른 내용을 보여주는 경우가 있다.
+- 예를 들어 /member/login은 로그인한 사용자에게는 로그인 페이지를 보여주고, 로그인한 사용자에게는 접근하지 못하도록 하는 처리를 할 수 있다.
+- 이때 유용한 것이 스프링 시큐리티의 expression이다.
+- 스프링 시큐리티 표현식은 security-context.xml에서도 사용된다.
+
+### 스프링 시큐리티에서 주로 사용되는 표현식
+|표현식|설명|
+|:---|:---|
+|hasRole([role]), hasAuthority([authority])|해당 권한이 있으면 True|
+|hasAnyRole([role, role2]), hasAnyAuthority([authority])|여러 권한들 중에서 하나라도 해당하는 권한이 있으면 true|
+|principal|현재 사용자 정보|
+|permitAll|모든 사용자 허용|
+|denyAll|모든 사용자 거부|
+|isAnonymous()|익명의 사용자의 경우(로그인을 하지 않은 경우에도 해당)|
+|isAuthenticated()|인증된 사용자면 true, 인증된 사용자만 접근 가능|
+|isFullyAuthenticated()|Remember-me로 인증된 것이 아닌 인증된 사용자인 경우 true|
+- 표현식은 거의 대부분 참(true)/거짓(false)를 리턴하기에 조건문을 사용하는 것처럼 사용
+
+## Login 페이지를 작성할 때 신경 써야 할 부분들
+- JSTL이나 스프링 시큐리티의 태그를 사용할 수 있도록 선언
+- CSS 파일이나 JS 파일의 링크는 절대 경로를 쓰도록 수정
+- \<form> 태그 내의 \<input> 태그의 name 속성을 스프링 시큐리티에 맞게 작성
+   - 가장 신경 써야 할 부분
+- CSRF 토큰 항목 추가
+- JavaScript를 통한 로그인 전송
+
+### 스프링 시큐리티 로그인 처리
+- 스프링 시큐리티는 기본적으로 로그인 후 처리를 SavedRequestAwareAuthenticationSuccessHandler라는 클래스를 이용
+- 해당 클래스는 사용자가 원래 보려고 했던 페이지의 정보를 유지해서 로그인 후에 다시 원했던 페이지로 이동하는 방식
+
+### SavedRequestAwareAuthenticationSuccessHandler 이용하는 설정
+- XML이나 Java 설정에서 authentication-success-handler-ref 속성이나 successHandler() 메서드를 삭제하고 관련 스프링 빈의 설정도 사용하지 않도록 설정해야 한다.
+```xml
+<!-- security-context.xml -->
+...
+\<security:from-login login-page="/member/login"/>
+...
+```
+
+### 컨트롤러에서 스프링 시큐리티 처리
+#### @PreAuthorize("표현식")
+- 예시
+   ```java
+        @Controller
+        public class example{
+            @GetMapping("/register")
+            @PreAuthorize("isAuthenticated()")
+            public void register(){
+
+            }
+
+            @PostMapping("/register")
+            @PreAuthorize("isAuthenticated()")
+            public String register(...){
+                //......
+            }
+        }
+   ```
+   - @PreAuthorize : isAuthenticated()로 어떠한 사용자든 로그인이 성공한 사용자만이 해당 기능을 사용할 수 있도록 처리

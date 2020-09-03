@@ -27,5 +27,4 @@ public class CustomUser extends User{
 				.collect(Collectors.toList()));
 		this.user = vo;
 	}
-	
 }
