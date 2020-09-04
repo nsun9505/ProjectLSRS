@@ -290,3 +290,84 @@ JDBC와 약간의 쿼리를 이용하는 것만으로도 데이터베이스를 �
         }
    ```
    - @PreAuthorize : isAuthenticated()로 어떠한 사용자든 로그인이 성공한 사용자만이 해당 기능을 사용할 수 있도록 처리
+
+## CSRF 토큰 설정
+스프링 시큐리티를 사용할 떄 POST 방식의 전송은 반드시 **CSRF 토큰**을 사용하도록 추가해야 한다.
+- 보통 form 태그 내에 CSRF 토큰 값을 input 태그의 hidden 타입으로 추가한다.
+    ```html
+        <form role="form" action="/board/register" method="post">
+            <input type="hidden" name="${_csrf.parametername}" 
+                    value="${_csrf.token}">
+        </form>
+    ```
+
+## 스프링 시큐리티 한글 처리
+한글 처리는 web.xml을 이용해서 스프링의 CharacterEncodingFiletr를 이용
+- 시큐리티를 필터로 적용할 때에는 필터의 순서에 주의해야 한다.
+    ```xml
+    <!-- web.xml 일부 -->
+    <!-- 인코딩 설정, 스프링 시큐리티 적용 순서로 한다. -->
+    <filter>
+        <filter-name>encodingFilter</filter-name>
+        <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+        <init-param>
+            <param-name>encoding</param-name>
+            <param-value>UTF-8</param-name>
+        </init-param>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>encodingFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <filter>
+        스프링 시큐리티
+    </filter>
+    <filter-mapping>
+        스프링 시큐리티 매핑
+    </filter-mapping>
+    ```
+    - 필터 순서가 바뀌면 한글이 깨져서 컨트롤러로 전달된다.
+
+## 현재 로그인한 사용자만이 수정/삭제 작업하는 기능 구현
+JSP에서 spring security 관련 태그를 사용
+```html
+    <sec:authentication property="principal" val="pinfo">
+
+    <sec:authorize access="isAuthenticated()">
+        <c:if test="${pinfo.username eq reserv.userId}">
+            <button data-oper="modify" class="btn">Modify</btn>
+        </c:if>
+    </sec:authorize>
+```
+- \<sec:authentication> 태그를 매번 이용하는 것은 불편하기에 로그인과 관련된 정보인 principal을 아예 JSP 내에서 pinfo라는 이름의 변수로 사용
+- \<sec:authorize>는 인증받은 사용자만이 영향을 받기 위해 지정
+- 내부에서는 username과 예약한 사용자 userId가 일치하는지를 확인해서 Modify 버튼 활성화 및 비활성화
+
+
+## 컨트롤러에서의 제어
+컨트롤러에서 메서드를 실행하기 전에 로그인한 사용자와 현재 파라미터로 전달되는 작성자가 일치하는지 체크
+- @PreAuthorize의 경우 문자열로 표현식을 지정할 수 있는데
+- 컨트롤러에 전달되는 파라미터를 같이 사용할 수 있으므로 유용하다.
+    ```java
+        @PreAuthorize("principal.username == #reservationUser")
+        @PostMapping("/remove")
+        public String remove(@RequestMapping("rno") Long rno, RedirectAttributes rttr, String reservationUser){
+            log.info("remove....");
+
+            if(service.remove(rno)){
+                rttr.addFlashAttribute("result", "success");
+            }
+            return "redirect:/reserv/info";
+        }
+    ```
+
+## Ajax와 스프링 시큐리티 처리
+스프링 시큐리티가 적용되면 POST, PUT, PATCH, DELETE와 같은 방식으로 데이터를 전송하는 경우
+- 반드시 추가적으로 **X-CSRF-TOKEN**와 같은 헤더 정보를 추가해서 CSRF 토큰값을 전달하도록 수정해야 한다.
+- Ajax는 JavaScript를 이용하기에 브라우저에서는 CSRF 토큰과 관련된 값을 변수로 선언하고, 전송 시 포함시켜주는 방식으로 수정하면 될 것이다.
+
+<br><br>
+
+## 이제 회원관련 기능을 구현해보자.
