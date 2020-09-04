@@ -11,7 +11,7 @@
   <meta name="description" content="">
   <meta name="author" content="">
 
-  <title>SB Admin 2 - Login</title>
+  <title>Login</title>
 
   <!-- Custom fonts for this template-->
   <link href="/resources/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -22,22 +22,63 @@
 
 </head>
 
-<body class="bg-gradient-primary">
+<body>
 
-<div class="container">
-	<form class="user" method="post" action="/login">
-		<div class="form-group">
-			<input type="text" class="form-control form-control-user" name="username" placeholder="ID">
-		</div>
-			<div class="form-group">
-				<input type="password" class="form-control form-control-user" name="password" placeholder="Password">
-			</div>
-			<div class="form-group">
-				<input type="submit" class="btn btn-user btn-block">
-			</div>
-			<input type="hidden" name="${_csrf.parameterName }" value="${_csrf.token }">
-	</form>
-</div>
+  <div class="container">
+
+    <!-- Outer Row -->
+    <div class="row justify-content-center">
+
+      <div class="col-lg-6">
+        <div class="card o-hidden border-0 shadow-lg my-5">
+          <div class="card-body p-0">
+            <!-- Nested Row within Card Body -->
+            <div class="row">
+              <div class="col-lg-12">
+                <div class="p-5">
+                  <div class="text-center">
+                    <h1 class="h2 text-gray-900 mb-4">우리 동네 도서관 예약</h1>
+                  </div>
+                  <form class="user" action="/login" method="post">
+                  	   <input type="hidden" name="${_csrf.parameterName }" value="${_csrf.token }">
+                    <div class="form-group">
+                      <input type="text" class="form-control form-control-user" name="username" placeholder="아이디">
+                    </div>
+                    <div class="form-group">
+                      <input type="password" class="form-control form-control-user" name="password" placeholder="비밀번호">
+                    </div>
+                    <!-- 
+                    <div class="form-group">
+                      <div class="custom-control custom-checkbox small">
+                        <input type="checkbox" class="custom-control-input" id="customCheck">
+                        <label class="custom-control-label" for="customCheck">Remember Me</label>
+                      </div>
+                    </div>
+                     -->
+                    <p><c:out value="${error}"/></p>
+                    <button class="btn btn-primary btn-user btn-block">
+                      Login
+                    </button>
+                    <hr>
+                  </form>
+                  <div class="text-center">
+                  	<a class="small" href="forgot-password.html">아이디 찾기</a>
+                    	<a class="small" href="forgot-password.html">비밀번호 찾기</a>
+                  </div>
+                  <div class="text-center">
+                    <a class="small" href="register.html">회원가입</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
 
   <!-- Bootstrap core JavaScript-->
   <script src="/resources/vendor/jquery/jquery.min.js"></script>

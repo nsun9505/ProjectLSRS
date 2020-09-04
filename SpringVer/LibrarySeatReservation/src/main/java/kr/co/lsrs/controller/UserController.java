@@ -10,7 +10,7 @@ import lombok.extern.log4j.Log4j;
 @RequestMapping("/member")
 @Controller
 @Log4j
-public class MemberController {
+public class UserController {
 	@GetMapping("/login")
 	public void loginInput(String error, String logout, Model model) {
 		if(error != null)
@@ -18,11 +18,6 @@ public class MemberController {
 		
 		if(logout != null)
 			model.addAttribute("logout", "로그아웃되었습니다.");
-	}
-	
-	@GetMapping("/logout")
-	public void logoutGET() {
-		log.info("custom logout");
 	}
 	
 	@GetMapping("/admin")

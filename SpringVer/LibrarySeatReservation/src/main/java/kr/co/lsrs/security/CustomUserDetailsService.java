@@ -1,6 +1,7 @@
 package kr.co.lsrs.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -17,14 +18,18 @@ public class CustomUserDetailsService implements UserDetailsService{
 	private UserMapper userMapper;
 
 	@Override
-	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException{
 		log.warn("Load User by UserName : " + username);
 		
 		UserVO vo = userMapper.read(username);
 		
 		log.warn("queried by user mapper : " + vo);
 		
-		return vo == null ? null : new CustomUser(vo);
+		if(vo == null) {
+			throw new UsernameNotFoundException("Not Found User");
+		}
+		
+		return new CustomUser(vo);
 	}
 	
 	
