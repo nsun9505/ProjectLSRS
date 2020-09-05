@@ -16,10 +16,10 @@
 
 	<security:http>
 		<security:form-login 
-			login-page="/member/login"
+			login-page="/user/login"
 			authentication-failure-handler-ref="loginFailureHandler"
 		/>
-		<security:logout logout-url="/member/logout" invalidate-session="true"/> 
+		<security:logout logout-url="/user/logout" invalidate-session="true"/> 
 	</security:http>
 	
 	<security:authentication-manager>

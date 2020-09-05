@@ -66,7 +66,7 @@
                     	<a class="small" href="forgot-password.html">비밀번호 찾기</a>
                   </div>
                   <div class="text-center">
-                    <a class="small" href="register.html">회원가입</a>
+                    <a class="small" href="/user/register">회원가입</a>
                   </div>
                 </div>
               </div>
@@ -79,7 +79,6 @@
     </div>
 
   </div>
-
   <!-- Bootstrap core JavaScript-->
   <script src="/resources/vendor/jquery/jquery.min.js"></script>
   <script src="/resources/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -89,6 +88,5 @@
 
   <!-- Custom scripts for all pages-->
   <script src="/resources/js/sb-admin-2.min.js"></script>
-
 </body>
 </html>
