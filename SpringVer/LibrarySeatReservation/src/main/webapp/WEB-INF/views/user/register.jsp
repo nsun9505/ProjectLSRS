@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -19,6 +20,7 @@
   <!-- Custom styles for this template-->
   <link href="/resources/css/sb-admin-2.min.css" rel="stylesheet">
 
+<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 </head>
 
 <body>
@@ -52,9 +54,14 @@
 					  <div class="form-group">
                       <input type="text" class="form-control form-control-user" name="name" placeholder="이름" required>
                     </div>
-                    <div class="form-group">
-                      <input type="text" class="form-control form-control-user" name="phoneNumber" placeholder="휴대폰 번호" required>
-                    </div>
+                    <div class="form-group row">
+                  		<div class="col-sm-6 mb-3 mb-sm-0">
+                    			<input type="text" class="form-control form-control-user" id="phoneNumber" name="phoneNumber" placeholder="휴대폰 번호 : -없이 입력">
+                  		</div>
+                  		<div class="col-sm-6">
+                    			<input type="button" class="btn btn-primary btn-user btn-block" id="reqAuth" value="인증">
+                  		</div>
+                		</div>
                     <div class="form-group">
                       <input type="text" class="form-control form-control-user" name="address" placeholder="주소" required>
                     </div>
@@ -87,5 +94,30 @@
   <!-- Custom scripts for all pages-->
   <script src="/resources/js/sb-admin-2.min.js"></script>
 
+
+	<script>
+		var csrfHeaderName = "${_csrf.headerName}";
+		var csrfTokenValue = "${_csrf.token}";
+		$(document).ajaxSend(function(e, xhr, options){
+			xhr.setRequestHeader(csrfHeaderName, csrfTokenValue);
+		});
+		
+		$(document).ready(function(){
+			$("#reqAuth").on("click", function(e){
+				var phNum = {"phNum": document.getElementById("phoneNumber").value};				
+				
+				$.ajax({
+					url: '/sms/request',
+					contentType: "application/json; charset=utf-8;",
+					data: JSON.stringify(phNum),
+					type: 'POST',
+					dataType: 'json',
+					success: function(result){
+						alert(result);
+					}
+				})
+			})
+		})
+	</script>
 </body>
 </html>
