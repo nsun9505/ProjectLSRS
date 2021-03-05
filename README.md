@@ -1,4 +1,4 @@
-# ProjectLSRS
+# ProjectLISRS
 Project Library Integrated Seat Reservation Service : 도서관 통합 좌석 예약 서비스
 
 # Project Description
