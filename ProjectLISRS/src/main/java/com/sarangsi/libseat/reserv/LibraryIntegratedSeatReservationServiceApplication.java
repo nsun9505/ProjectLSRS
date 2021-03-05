@@ -1,4 +1,4 @@
-package com.sarangsi.libseat.reserv.Library.Integrated.Seat.Reservation.Service;
+package com.sarangsi.libseat.reserv;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
