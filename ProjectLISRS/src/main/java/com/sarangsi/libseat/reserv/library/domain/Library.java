@@ -1,4 +1,4 @@
-package com.sarangsi.libseat.reserv.domain;
+package com.sarangsi.libseat.reserv.library.domain;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
