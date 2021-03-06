@@ -24,7 +24,7 @@ public class Reservation {
     private String endTime;
 
     private int extensionCount;
-    
+
 //    @ManyToOne(fetch = FetchType.LAZY)
 //    @JoinColumn(name = "member_id")
 //    private Member owner;
