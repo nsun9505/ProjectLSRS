@@ -1,4 +1,4 @@
-package com.sarangsi.libseat.reserv.library.domain;
+package com.sarangsi.libseat.reserv.room.domain;
 
 public enum RoomStatus {
     OPEN, CLOSE, SUSPEND

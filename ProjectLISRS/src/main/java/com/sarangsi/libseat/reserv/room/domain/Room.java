@@ -1,4 +1,6 @@
-package com.sarangsi.libseat.reserv.library.domain;
+package com.sarangsi.libseat.reserv.room.domain;
+
+import com.sarangsi.libseat.reserv.library.domain.Library;
 
 import javax.persistence.*;
 
