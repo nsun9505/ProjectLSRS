@@ -4,6 +4,7 @@ import com.sarangsi.libseat.reserv.seat.domain.Seat;
 import com.sarangsi.libseat.reserv.member.domain.Member;
 
 import javax.persistence.*;
+import javax.validation.OverridesAttribute;
 
 @Entity
 public class Reservation {
@@ -25,7 +26,8 @@ public class Reservation {
 
     private int extensionCount;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "member_id")
-//    private Member owner;
+    @ManyToOne(fetch = FetchType.LAZY)
+    // JoinColumn (name = "owner_id") : 매핑할 FK 이름 = owner_id
+    @JoinColumn(name = "owner_id")
+    private Member owner;
 }
