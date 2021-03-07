@@ -8,7 +8,7 @@ import com.sarangsi.libseat.reserv.member.domain.Member;
 import javax.persistence.*;
 
 @Entity(name = "regular_member_request")
-public class RegularMembeRequest extends Board {
+public class RegularMemberRequest extends Board {
     @Id @GeneratedValue
     @Column(name = "regular_member_request_id")
     private Long id;

@@ -1,4 +1,4 @@
-package com.sarangsi.libseat.reserv.seat.usagehistory.domain;
+package com.sarangsi.libseat.reserv.seatusagehistory.domain;
 
 import com.sarangsi.libseat.reserv.member.domain.Member;
 import com.sarangsi.libseat.reserv.seat.domain.Seat;

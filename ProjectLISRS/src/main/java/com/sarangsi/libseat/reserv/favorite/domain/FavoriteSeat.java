@@ -1,4 +1,4 @@
-package com.sarangsi.libseat.reserv.seat.favorite.domain;
+package com.sarangsi.libseat.reserv.favorite.domain;
 
 import com.sarangsi.libseat.reserv.member.domain.Member;
 import com.sarangsi.libseat.reserv.seat.domain.Seat;
