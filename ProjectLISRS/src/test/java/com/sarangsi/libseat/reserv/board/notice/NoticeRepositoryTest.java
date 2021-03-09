@@ -34,6 +34,7 @@ public class NoticeRepositoryTest {
     @Rollback(false)
     void saveTest(){
         Notice notice = new Notice();
+        notice.setId(10L);
         notice.setTitle("title");
 //        notice.setAuthor(new Member());
 //        notice.setLibrary(new Library());
