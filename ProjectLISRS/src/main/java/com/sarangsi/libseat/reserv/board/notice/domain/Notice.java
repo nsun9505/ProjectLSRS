@@ -3,10 +3,14 @@ package com.sarangsi.libseat.reserv.board.notice.domain;
 import com.sarangsi.libseat.reserv.board.Board;
 import com.sarangsi.libseat.reserv.library.domain.Library;
 import com.sarangsi.libseat.reserv.member.domain.Member;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 
 @Entity
+@Getter
+@Setter
 public class Notice extends Board {
     @Id @GeneratedValue
     @Column(name = "notice_id")
