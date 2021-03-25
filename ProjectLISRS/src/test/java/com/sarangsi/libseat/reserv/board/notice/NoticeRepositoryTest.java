@@ -20,7 +20,7 @@ import javax.persistence.EntityManager;
 //JUnit5 : @ExtendWith(SpringExtension.class)
 @ExtendWith(SpringExtension.class)
 @SpringBootTest // Autowired를 쓰기 위해서 사용
-@Transactional(readOnly = true)
+@Transactional
 public class NoticeRepositoryTest {
     @Autowired
     NoticeBoardRepository repository;
@@ -30,20 +30,16 @@ public class NoticeRepositoryTest {
 
     @Test
     @DisplayName("글 저장")
-    @Transactional(readOnly = false)
+    @Transactional
     @Rollback(false)
     void saveTest(){
         Notice notice = new Notice();
-        notice.setId(10L);
         notice.setTitle("title");
 //        notice.setAuthor(new Member());
 //        notice.setLibrary(new Library());
         notice.setContent("first content");
 
         repository.save(notice);
-
-        em.flush();
-        em.clear();
 
         Notice findNotice = repository.findById(1L);
 
